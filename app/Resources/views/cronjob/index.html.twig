@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Cronjobs list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Cronexpression</th>
+                <th>Command</th>
+                <th>Createdat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cronjob in cronjobs %}
+            <tr>
+                <td><a href="{{ path('cronjob_show', { 'id': cronjob.id }) }}">{{ cronjob.id }}</a></td>
+                <td>{{ cronjob.name }}</td>
+                <td>{{ cronjob.cronExpression }}</td>
+                <td>{{ cronjob.command }}</td>
+                <td>{% if cronjob.createdAt %}{{ cronjob.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('cronjob_show', { 'id': cronjob.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('cronjob_edit', { 'id': cronjob.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('cronjob_new') }}">Create a new cronjob</a>
+        </li>
+    </ul>
+{% endblock %}
