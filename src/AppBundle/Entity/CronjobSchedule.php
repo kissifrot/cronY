@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CronjobSchedule
 {
+    const STATUS_SCHEDULED = 1;
+    const STATUS_STARTED = 2;
+    const STATUS_ENDED = 3;
+    const STATUS_ERROR = 4;
     /**
      * @var int
      *
@@ -27,6 +31,13 @@ class CronjobSchedule
      * @ORM\Column(name="status", type="smallint")
      */
     private $status;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="scheduled_at", type="datetime")
+     */
+    private $scheduledAt;
 
     /**
      * @var \DateTime|null
@@ -59,7 +70,7 @@ class CronjobSchedule
     /**
      * @var Cronjob
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cronjob", inversedBy="schedules")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cronjob", inversedBy="schedules", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $cronjob;
@@ -68,6 +79,7 @@ class CronjobSchedule
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
+        $this->status = self::STATUS_SCHEDULED;
     }
 
     /**
@@ -222,5 +234,29 @@ class CronjobSchedule
         $this->cronjob = $cronjob;
 
         return $this;
+    }
+
+    /**
+     * Set scheduledAt.
+     *
+     * @param \DateTime $scheduledAt
+     *
+     * @return CronjobSchedule
+     */
+    public function setScheduledAt(\DateTime $scheduledAt): CronjobSchedule
+    {
+        $this->scheduledAt = $scheduledAt;
+
+        return $this;
+    }
+
+    /**
+     * Get scheduledAt.
+     *
+     * @return \DateTime
+     */
+    public function getScheduledAt(): \DateTime
+    {
+        return $this->scheduledAt;
     }
 }

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Machines list</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for machine in machines %}
+            <tr>
+                <td><a href="{{ path('machine_show', { 'id': machine.id }) }}">{{ machine.id }}</a></td>
+                <td>{{ machine.name }}</td>
+                <td>{% if machine.createdAt %}{{ machine.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('machine_show', { 'id': machine.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('machine_edit', { 'id': machine.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('machine_new') }}">Create a new machine</a>
+        </li>
+    </ul>
+{% endblock %}

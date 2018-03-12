@@ -38,6 +38,13 @@ class Machine
     private $createdAt;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Cronjob", mappedBy="machine")
@@ -79,7 +86,7 @@ class Machine
      *
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -142,5 +149,29 @@ class Machine
     public function getCronjobs(): Collection
     {
         return $this->cronjobs;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string $description
+     *
+     * @return Machine
+     */
+    public function setDescription(?string $description): Machine
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
     }
 }

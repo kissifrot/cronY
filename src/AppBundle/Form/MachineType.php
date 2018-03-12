@@ -2,15 +2,13 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\Machine;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Entity\Cronjob;
+use AppBundle\Entity\Machine;
 
-class CronjobType extends AbstractType
+class MachineType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -19,9 +17,6 @@ class CronjobType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('cronExpression')
-            ->add('command', null, ['label' => 'Command run'])
-            ->add('machine', EntityType::class, ['class' => Machine::class, 'choice_label' => 'name', 'label' => 'Machine on which the cron job will run'])
             ->add('description')
             ->add('create', SubmitType::class);
     }
@@ -32,7 +27,7 @@ class CronjobType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
-            'data_class' => Cronjob::class
+            'data_class' => Machine::class
         ));
     }
 
@@ -41,6 +36,6 @@ class CronjobType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'appbundle_cronjob';
+        return 'appbundle_machine';
     }
 }

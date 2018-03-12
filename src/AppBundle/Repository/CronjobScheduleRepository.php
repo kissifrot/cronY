@@ -2,6 +2,10 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Cronjob;
+use AppBundle\Entity\CronjobSchedule;
+use Doctrine\ORM\Query\Expr;
+
 /**
  * CronjobScheduleRepository
  *
@@ -10,4 +14,74 @@ namespace AppBundle\Repository;
  */
 class CronjobScheduleRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param Cronjob $cronjob
+     * @param int     $count
+     * @return mixed
+     */
+    public function getNextRunsFor(Cronjob $cronjob, int $count = 5)
+    {
+        return $this->createQueryBuilder('cs')
+            ->where('cs.cronjob = :cronjob')
+            ->andWhere('cs.scheduledAt >= :now')
+            ->setParameter('cronjob', $cronjob)
+            ->setParameter('now', new \DateTime())
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Cronjob $cronjob
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNextRunsCountFor(Cronjob $cronjob): int
+    {
+        return $this->createQueryBuilder('cs')
+            ->select('COUNT(cs)')
+            ->where('cs.cronjob = :cronjob')
+            ->andWhere('cs.scheduledAt >= :now')
+            ->setParameter('cronjob', $cronjob)
+            ->setParameter('now', new \DateTime())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param int       $cronjobId
+     * @param \DateTime $runTime
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findScheduledByJobAndTime(int $cronjobId, \DateTime $runTime)
+    {
+        return $this->createQueryBuilder('cs')
+            ->addSelect('c')
+            ->innerJoin('cs.cronjob', 'c', Expr\Join::WITH, 'c.id = :cronjob_id')
+            ->where('cs.scheduledAt = :runTime')
+            ->andWhere('cs.status = :statusScheduled')
+            ->setParameter('cronjob_id', $cronjobId)
+            ->setParameter('runTime', $runTime)
+            ->setParameter('statusScheduled', CronjobSchedule::STATUS_SCHEDULED)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param int       $cronjobId
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findRunningByJob(int $cronjobId)
+    {
+        return $this->createQueryBuilder('cs')
+            ->addSelect('c')
+            ->innerJoin('cs.cronjob', 'c', Expr\Join::WITH, 'c.id = :cronjob_id')
+            ->where('cs.status = :statusRunning')
+            ->setParameter('cronjob_id', $cronjobId)
+            ->setParameter('statusScheduled', CronjobSchedule::STATUS_STARTED)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

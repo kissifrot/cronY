@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create a new cronjob{% endblock %}
+{% block title %}Create a new machine{% endblock %}
 
 {% block body %}
-    <h1>Create a new cronjob</h1>
+    <h1>Create a new machine</h1>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
     {{ form_end(form) }}
 
     <p>
-        <a href="{{ path('cronjob_index') }}">Back to the list</a>
+        <a href="{{ path('machine_index') }}">Back to the list</a>
     </p>
 {% endblock %}

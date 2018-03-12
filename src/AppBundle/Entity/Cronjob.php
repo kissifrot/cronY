@@ -43,6 +43,13 @@ class Cronjob
     /**
      * @var string|null
      *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="command", type="string", length=255, nullable=true)
      */
     private $command;
@@ -65,7 +72,7 @@ class Cronjob
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CronjobSchedule", mappedBy="cronjob")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CronjobSchedule", mappedBy="cronjob", orphanRemoval=true)
      */
     private $schedules;
 
@@ -218,18 +225,19 @@ class Cronjob
         }
 
         $this->schedules[] = $schedule;
-        $schedule->setMachine($this);
+        $schedule->setCronjob($this);
     }
 
     /**
      * Remove schedule.
      *
-     * @param CronjobSchedule $schedule
+     * @param \AppBundle\Entity\CronjobSchedule $schedule
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCronjob(CronjobSchedule $schedule)
+    public function removeSchedule(\AppBundle\Entity\CronjobSchedule $schedule)
     {
-        $this->schedules->removeElement($schedule);
-        $schedule->setCronjob(null);
+        return $this->schedules->removeElement($schedule);
     }
 
     /**
@@ -240,5 +248,29 @@ class Cronjob
     public function getSchedules(): Collection
     {
         return $this->schedules;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string $description
+     *
+     * @return Cronjob
+     */
+    public function setDescription(?string $description): Cronjob
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
     }
 }

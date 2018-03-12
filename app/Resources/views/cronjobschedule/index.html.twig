@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Cronjobschedules list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Startedat</th>
+                <th>Endedat</th>
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cronjobSchedule in cronjobSchedules %}
+            <tr>
+                <td><a href="{{ path('cronjobschedule_show', { 'id': cronjobSchedule.id }) }}">{{ cronjobSchedule.id }}</a></td>
+                <td>{{ cronjobSchedule.status }}</td>
+                <td>{% if cronjobSchedule.startedAt %}{{ cronjobSchedule.startedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if cronjobSchedule.endedAt %}{{ cronjobSchedule.endedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if cronjobSchedule.createdAt %}{{ cronjobSchedule.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if cronjobSchedule.updatedAt %}{{ cronjobSchedule.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('cronjobschedule_show', { 'id': cronjobSchedule.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('cronjobschedule_edit', { 'id': cronjobSchedule.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('cronjobschedule_new') }}">Create a new cronjobSchedule</a>
+        </li>
+    </ul>
+{% endblock %}

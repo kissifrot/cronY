@@ -1,14 +1,16 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Cronjobs list{% endblock %}
+
 {% block body %}
     <h1>Cronjobs list</h1>
 
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Cronexpression</th>
+                <th>Cron Expression</th>
                 <th>Command</th>
                 <th>Createdat</th>
                 <th>Actions</th>
@@ -26,6 +28,9 @@
                     <ul>
                         <li>
                             <a href="{{ path('cronjob_show', { 'id': cronjob.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('cronjob_schedules', { 'id': cronjob.id }) }}">schedules</a>
                         </li>
                         <li>
                             <a href="{{ path('cronjob_edit', { 'id': cronjob.id }) }}">edit</a>

@@ -36,6 +36,9 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+      hashid_secret: '%secret%'
+      hashid_length: '%hashid_length%'
 
 # Doctrine Configuration
 doctrine:

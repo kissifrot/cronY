@@ -1,20 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <h1>Cronjob</h1>
+{% block title %}Cronjob {{ cronjob.name }}{% endblock %}
 
-    <table>
+{% block body %}
+    <h1>Cronjob {{ cronjob.name }}</h1>
+
+    <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ cronjob.id }}</td>
-            </tr>
             <tr>
                 <th>Name</th>
                 <td>{{ cronjob.name }}</td>
             </tr>
             <tr>
-                <th>Cronexpression</th>
+                <th>Cron Expression</th>
                 <td>{{ cronjob.cronExpression }}</td>
             </tr>
             <tr>
@@ -22,13 +20,44 @@
                 <td>{{ cronjob.command }}</td>
             </tr>
             <tr>
-                <th>Createdat</th>
+                <th>Created At</th>
                 <td>{% if cronjob.createdAt %}{{ cronjob.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Next run at</th>
+                <td>{{ next_schedules.0|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Next 5 runs</th>
+                <td>
+                    <ul>
+                        {% for next_schedule in next_schedules|slice(1) %}
+                        <li>{{ next_schedule|date('Y-m-d H:i:s') }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
         </tbody>
     </table>
 
+    <h3>API Urls</h3>
+    <p>
+        Start :<br>
+        <input class="form-control" type="text" value="{{ url('job_start', {'hashid': cronjob.id|hashid }) }}" readonly />
+    </p>
+    <p>
+        Complete :<br>
+        <input class="form-control" type="text" value="{{ url('job_complete', {'hashid': cronjob.id|hashid }) }}" readonly />
+    </p>
+    <p>
+        Error :<br>
+        <input class="form-control" type="text" value="{{ url('job_error', {'hashid': cronjob.id|hashid }) }}" readonly />
+    </p>
+
     <ul>
+        <li>
+            <a href="{{ path('cronjob_schedules', { 'id': cronjob.id }) }}">Show schedules</a>
+        </li>
         <li>
             <a href="{{ path('cronjob_index') }}">Back to the list</a>
         </li>

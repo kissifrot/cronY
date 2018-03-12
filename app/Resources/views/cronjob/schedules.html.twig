@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cronjob {{ cronjob.name }} - schedules{% endblock %}
+
+{% import _self as utils %}
+
+{% macro displayStatus(status, scheduledDate) %}
+    {# make the date to get 0s #}
+    {% set nowAt0s = date('now'|date('Y-m-d H:i:00')|date()) %}
+    {% if status is constant('AppBundle\\Entity\\CronjobSchedule::STATUS_SCHEDULED') %}
+        {% if scheduledDate > nowAt0s %}
+            <span class="btn btn-info disabled">Scheduled</span>
+        {% else %}
+            <span class="btn btn-danger disabled">Did not start</span>
+        {% endif %}
+    {% elseif status is constant('AppBundle\\Entity\\CronjobSchedule::STATUS_STARTED') %}
+        <span class="btn btn-info disabled">Running</span>
+    {% elseif status is constant('AppBundle\\Entity\\CronjobSchedule::STATUS_ENDED')%}
+        <span class="btn btn-success disabled">Ended successfully</span>
+    {% else %}
+        <span class="btn btn-danger disabled">Error</span>
+    {% endif %}
+{% endmacro %}
+
+
+{% block body %}
+    <h1>Cronjob {{ cronjob.name }} - schedules</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Scheduled date</th>
+            <th>Status</th>
+            <th>Start date</th>
+            <th>End date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for schedule in schedules %}
+            <tr>
+                <td>{{ schedule.scheduledAt|date('Y-m-d H:i:s') }}</td>
+                <td>{{ utils.displayStatus(schedule.status, schedule.scheduledAt) }}</td>
+                <td>{% if schedule.startedAt %}{{ schedule.startedAt|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+                <td>{% if schedule.endedAt %}{{ schedule.endedAt|date('Y-m-d H:i:s') }}{% else %}-{% endif %}</td>
+            </tr>
+        {%  endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('cronjob_show', { 'id': cronjob.id }) }}">Back to cronjob</a>
+        </li>
+        <li>
+            <a href="{{ path('cronjob_index') }}">Back to the cronjobs list</a>
+        </li>
+    </ul>
+{% endblock %}
